@@ -15,7 +15,7 @@ after_success:
 notifications:
   email:
     recipients:
-      - andreybossiy@gmail.com
+      - kiril5471710@gmail.com
     on_success: never # default: change
     on_failure: always # default: always
 
