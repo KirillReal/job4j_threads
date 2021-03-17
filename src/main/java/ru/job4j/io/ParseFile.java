@@ -21,20 +21,6 @@ public class ParseFile {
         return output.toString();
     }
 
-    public synchronized String getContentWithoutUnicode() throws IOException {
-        StringBuilder output = new StringBuilder();
-        try (BufferedReader i = new BufferedReader(new FileReader(file))) {
-            int data;
-            while ((data = i.read()) > 0) {
-                if (data < 0x80) {
-                    output.append((char) data);
-                }
-
-            }
-        }
-        return output.toString();
-    }
-
     public synchronized void saveContent(String content) throws IOException {
         try (PrintWriter o = new PrintWriter(new BufferedOutputStream(new FileOutputStream(file))))
         {
