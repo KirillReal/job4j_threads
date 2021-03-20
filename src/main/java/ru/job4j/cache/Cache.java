@@ -13,7 +13,7 @@ public class Cache {
     public void update(Base model) {
         memory.computeIfPresent(model.getId(), (id, base) -> {
                     if (base.getVersion() != model.getVersion()) {
-                        throw new OptimisticException("версии не совпали");
+                        throw new OptimisticException("The model was previously changed");
                     }
                     base = new Base(id, model.getVersion() + 1);
                     base.setName(model.getName());
