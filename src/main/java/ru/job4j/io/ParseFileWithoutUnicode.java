@@ -1,21 +1,31 @@
 package ru.job4j.io;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.function.Predicate;
 
-public class ParseFileWithoutUnicode {
-    private File file;
+public class ParseFileWithoutUnicode implements ParseStrategy{
 
-    public synchronized void setFile(File f) {
-        file = f;
+    private final File file;
+
+    ParseFileWithoutUnicode(File file) {
+        this.file = file;
     }
 
-    public synchronized File getFile() {
-        return file;
-    }
-
-   public Predicate<Integer> getContentWithoutUnicode()
-    {
-        return data -> data < 0x80;
+    @Override public String content(Predicate<Character> filter) {
+        StringBuilder output = new StringBuilder();
+        try (BufferedReader i = new BufferedReader(new FileReader(file))) {
+            int data;
+            while((data = (char) i.read()) > 0) {
+                if (filter.test((char) data)) {
+                    i.lines().forEach(output::append);
+                }
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output.toString();
     }
 }
