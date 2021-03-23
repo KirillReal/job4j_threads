@@ -6,14 +6,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @ThreadSafe
 public class CasCount {
-    private final AtomicReference<Integer> count = new AtomicReference<>();
+    private final AtomicReference<Integer> count = new AtomicReference<>(0);
 
     public void increment() {
-        int currentCount;
+        Integer currentCount;
         int newCount;
         do{
             currentCount = count.get();
-            newCount = currentCount++;
+            newCount = currentCount + 1;
         }while (!count.compareAndSet(currentCount,newCount));
     }
 

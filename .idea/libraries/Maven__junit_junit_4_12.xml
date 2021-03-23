@@ -2,7 +2,6 @@
   <library name="Maven: junit:junit:4.12">
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar!/" />
-      <root url="file://$PROJECT_DIR$/../javafx-sdk-11.0.2" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12-javadoc.jar!/" />
@@ -10,8 +9,5 @@
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12-sources.jar!/" />
     </SOURCES>
-    <excluded>
-      <root url="file://$PROJECT_DIR$/../javafx-sdk-11.0.2" />
-    </excluded>
   </library>
 </component>
