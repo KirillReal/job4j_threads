@@ -10,7 +10,23 @@ public class ParseFile implements ParseStrategy {
         this.file = file;
     }
 
-    public synchronized String getContent() throws IOException {
+    public String contentWithoutUnicode(Predicate<Character> filter) {
+        StringBuilder output = new StringBuilder();
+        try (BufferedReader i = new BufferedReader(new FileReader(file))) {
+            int data;
+            while((data = (char) i.read()) > 0) {
+                if (filter.test((char) data)) {
+                    i.lines().forEach(output::append);
+                }
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output.toString();
+    }
+
+    @Override
+    public synchronized String content(Predicate<Character> filter) {
         StringBuilder output = new StringBuilder();
         try (BufferedReader i = new BufferedReader(new FileReader(file))) {
             i.lines().forEach(output::append);
@@ -20,25 +36,4 @@ public class ParseFile implements ParseStrategy {
         return output.toString();
     }
 
-    public synchronized void saveContent(String content) throws IOException {
-        try (PrintWriter o = new PrintWriter(new BufferedOutputStream(new FileOutputStream(file))))
-        {
-            o.write(content);
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public String content(Predicate<Character> filter) {
-        StringBuilder output = new StringBuilder();
-        try (BufferedReader i = new BufferedReader(new FileReader(file))) {
-            if (filter.test((char) i.read())) {
-                    i.lines().forEach(output::append);
-            }
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-        return output.toString();
-    }
 }
