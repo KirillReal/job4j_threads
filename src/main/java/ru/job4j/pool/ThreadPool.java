@@ -55,12 +55,16 @@ public class ThreadPool {
 
     public static void main(String[] args) {
         ThreadPool pool = new ThreadPool();
+        /*
         for (int i = 0; i < 100;i++) {
             int count = i;
             pool.work(new Thread(()->
                     System.out.println(count + " task")));
         }
-
+         */
+        pool.work(() -> System.out.println("Task 1"));
+        pool.work(() -> System.out.println("Task 2"));
+        pool.work(() -> System.out.println("Task 3"));
         pool.shutdown();
     }
 }
