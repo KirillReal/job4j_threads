@@ -60,6 +60,7 @@ public class ThreadPool {
             pool.work(new Thread(()->
                     System.out.println(count + " task")));
         }
+
         pool.shutdown();
     }
 }
