@@ -15,17 +15,17 @@ public class ThreadPool {
             threads.add(new Thread(
                     () -> {
                         System.out.println(
-                                "Поток " + Thread.currentThread().getName() + " начал работать"
+                                "Thread " + Thread.currentThread().getName() + " started working"
                         );
                         while (!Thread.currentThread().isInterrupted()) {
                             try {
                                 System.out.println(
-                                        "Поток " + Thread.currentThread().getName() + " работает"
+                                        "Thread " + Thread.currentThread().getName() + " is running"
                                 );
                                 tasks.poll().run();
                             } catch (InterruptedException e) {
                                 System.out.println(
-                                        "Поток " + Thread.currentThread().getName() + " прерван"
+                                        "Thread " + Thread.currentThread().getName() + " interrupted"
                                 );
                                 Thread.currentThread().interrupt();
                             }
@@ -55,9 +55,11 @@ public class ThreadPool {
 
     public static void main(String[] args) {
         ThreadPool pool = new ThreadPool();
-        pool.work(() -> System.out.println("work1"));
-        pool.work(() -> System.out.println("work2"));
-        pool.work(() -> System.out.println("work3"));
+        for (int i = 0; i < 100;i++) {
+            int count = i;
+            pool.work(new Thread(()->
+                    System.out.println(count + " task")));
+        }
         pool.shutdown();
     }
 }
