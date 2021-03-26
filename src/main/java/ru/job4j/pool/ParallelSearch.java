@@ -25,24 +25,23 @@ public class ParallelSearch<T> extends RecursiveTask<Integer> {
         int middle = startIndex + (endIndex - startIndex) / 2;
         ParallelSearch<T> left = new ParallelSearch<>(array,elem,startIndex,middle);
         ParallelSearch<T> right = new ParallelSearch<>(array,elem, middle + 1,endIndex);
+        left.fork();
+        right.fork();
         int leftIndex = left.join();
         int rightIndex = right.join();
         return leftIndex != -1 ? leftIndex : rightIndex;
     }
 
-
-
-
-    private int findIndex() {
-        for (int i = startIndex; i <= endIndex; i++) {
-            if (array[i].equals(elem)) {
+    int findIndex () {
+        for (int i = startIndex; i <= endIndex;i++) {
+            if(array[i].equals(elem)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public static <T> int findIndex(T[] array, T elem) {
+    public static <T> int sort(T[] array, int elem) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         return forkJoinPool.invoke(new ParallelSearch<>(array, elem, 0, array.length - 1));
     }
