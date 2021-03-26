@@ -22,6 +22,4 @@ public class SingleLockListTest extends TestCase {
         list.iterator().forEachRemaining(rsl::add);
         assertThat(rsl, is(Set.of(1, 2)));
     }
-
-
 }

@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-public class Wget implements Runnable{
+public class Wget implements Runnable {
     private final String url;
     private final int speed;
     private final String file;
@@ -27,7 +27,7 @@ public class Wget implements Runnable{
             while ((bytesRead = in.read(dataBuffer, 0, speed)) != -1) {
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
                 leftTime = System.currentTimeMillis() - startTime;
-                if(leftTime < 1000) {
+                if (leftTime < 1000) {
                     Thread.sleep(leftTime);
                 }
                 startTime = System.currentTimeMillis();
@@ -38,7 +38,7 @@ public class Wget implements Runnable{
     }
 
     public static void main(String[] args) throws InterruptedException {
-        if(args.length != 2) {
+        if (args.length != 2) {
             throw new IllegalArgumentException("Нужно передать два значения");
         }
         String url = args[0];

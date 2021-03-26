@@ -11,10 +11,10 @@ public class CasCount {
     public void increment() {
         Integer currentCount;
         int newCount;
-        do{
+        do {
             currentCount = count.get();
             newCount = currentCount + 1;
-        }while (!count.compareAndSet(currentCount,newCount));
+        } while (!count.compareAndSet(currentCount, newCount));
     }
 
     public int get() {

@@ -2,7 +2,7 @@ package ru.job4j.io;
 
 import java.io.*;
 
-public class ParseSaveFile implements ParseSave{
+public class ParseSaveFile implements ParseSave {
 
     private final File file;
 
@@ -12,10 +12,9 @@ public class ParseSaveFile implements ParseSave{
 
     @Override
     public void content(String content) {
-        try (PrintWriter o = new PrintWriter(new BufferedOutputStream(new FileOutputStream(file))))
-        {
+        try (PrintWriter o = new PrintWriter(new BufferedOutputStream(new FileOutputStream(file)))) {
             o.write(content);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -9,7 +9,7 @@ public class CountTest extends TestCase {
     /**
      * Класс описывает нить со счетчиком.
      */
-    private class ThreadCount extends Thread {
+    private static class ThreadCount extends Thread {
         private final Count count;
 
         private ThreadCount(final Count count) {

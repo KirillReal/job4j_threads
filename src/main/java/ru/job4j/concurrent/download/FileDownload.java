@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.URL;
 
 public class FileDownload {
-    public static void main(String[] args) throws  Exception{
+    public static void main(String[] args) throws  Exception {
         String file = "https://raw.githubusercontent.com/peterarsentev/course_test/master/pom.xml";
         try (BufferedInputStream in = new BufferedInputStream(new URL(file).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream("pom_tmp.xml")) {

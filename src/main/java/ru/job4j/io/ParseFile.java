@@ -14,12 +14,12 @@ public class ParseFile implements ParseStrategy {
         StringBuilder output = new StringBuilder();
         try (BufferedReader i = new BufferedReader(new FileReader(file))) {
             int data;
-            while((data = (char) i.read()) > 0) {
+            while ((data = (char) i.read()) > 0) {
                 if (filter.test((char) data)) {
                     i.lines().forEach(output::append);
                 }
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return output.toString();
@@ -30,7 +30,7 @@ public class ParseFile implements ParseStrategy {
         StringBuilder output = new StringBuilder();
         try (BufferedReader i = new BufferedReader(new FileReader(file))) {
             i.lines().forEach(output::append);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return output.toString();

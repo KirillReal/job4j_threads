@@ -8,14 +8,16 @@ public class EmailNotifications {
             Runtime.getRuntime().availableProcessors()
     );
 
-    public void send(String subject,String body,String email) {}
+    public void send(String subject, String body, String email) {
+
+    }
 
     public void emailTo(User user) {
         pool.submit(
                 () -> {
                     String subject = String.format(
                             "Notification %s to email %s.",
-                            user.getName(),user.getEmail());
+                            user.getName(), user.getEmail());
                     String body = String.format(
                             "Add a new event to %s",
                             user.getName()
@@ -30,7 +32,7 @@ public class EmailNotifications {
         while (!pool.isTerminated()) {
             try {
                 Thread.sleep(100);
-            }catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                e.printStackTrace();
             }
         }
