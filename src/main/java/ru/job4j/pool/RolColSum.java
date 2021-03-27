@@ -16,10 +16,15 @@ public class RolColSum {
             this.rowSum = rowSum;
             this.colSum = colSum;
         }
+
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Sums sums = (Sums) o;
             return rowSum == sums.rowSum && colSum == sums.colSum;
         }
@@ -54,8 +59,7 @@ public class RolColSum {
         return rsl;
     }
 
-
-    private static Sums getSums (int[][] array,int index) {
+    private static Sums getSums(int[][] array, int index) {
         int rowSum = 0;
         int colSum = 0;
         for (int i = 0; i < array.length; i++) {
@@ -64,6 +68,7 @@ public class RolColSum {
         }
         return new Sums(rowSum, colSum);
     }
+
     public static Sums[] asyncSum(int[][] matrix) throws ExecutionException, InterruptedException {
         Sums[] rsl = new Sums[matrix.length];
         Map<Integer, CompletableFuture<Sums>> futures = new HashMap<>();
