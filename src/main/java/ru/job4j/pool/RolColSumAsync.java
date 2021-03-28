@@ -44,6 +44,7 @@ public class RolColSumAsync {
         }
 
     }
+
     public static RolColSumAsync.Sums[] asyncSum(int[][] matrix) throws ExecutionException, InterruptedException {
         RolColSumAsync.Sums[] rsl = new RolColSumAsync.Sums[matrix.length];
         Map<Integer, CompletableFuture<RolColSumAsync.Sums>> futures = new HashMap<>();
