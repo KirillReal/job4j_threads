@@ -1,7 +1,7 @@
 package ru.job4j.multithreads;
 
 public class Switcher {
-    public static void main(String[] args) throws InterruptedException{
+    public static void main(String[] args) throws InterruptedException {
         MasterSlaveBarrier slaveBarrier = new MasterSlaveBarrier();
         Thread first = new Thread(
                 () -> {

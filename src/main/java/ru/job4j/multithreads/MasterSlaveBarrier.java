@@ -4,10 +4,10 @@ public class MasterSlaveBarrier {
     private volatile boolean masterWorking = true;
 
     public synchronized void tryMaster() {
-        while(!masterWorking) {
+        while (!masterWorking) {
             try {
                 wait();
-            }catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -17,7 +17,7 @@ public class MasterSlaveBarrier {
         while (masterWorking) {
             try {
                 wait();
-            }catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

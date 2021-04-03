@@ -53,6 +53,4 @@ public class Producer {
         producer.executorService.shutdown();
         System.out.println(producer.storage.getResult());
     }
-
-
 }
