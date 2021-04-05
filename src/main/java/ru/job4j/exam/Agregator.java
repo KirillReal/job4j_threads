@@ -1,58 +1,49 @@
 package ru.job4j.exam;
 
-import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.StringJoiner;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 
-public class Agregator implements Runnable {
-    private final Storage storage;
 
-    private final CountDownLatch latch;
+public class Agregator implements Callable<Camera> {
+    private static final Logger LOGGER =  LoggerFactory.getLogger(Producer.class.getName());
+    private final String[] dataUrl;
 
-    public Agregator(Storage storage, CountDownLatch latch) {
-        this.storage = storage;
-        this.latch = latch;
-    }
-
-    //Method reading url and return JSONObject
-    private JSONObject readUrl(String url) {
-        URL link = null;
-        try {
-            link = new URL(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        StringJoiner joiner = new StringJoiner(System.lineSeparator());
-        try {
-            assert link != null;
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(link.openStream()))) {
-                reader.lines()
-                        .forEach(joiner::add);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new JSONObject(joiner.toString());
+    public Agregator(String dataUrl) {
+        this.dataUrl = dataUrl.split(" ");
     }
 
     @Override
-    public void run() {
-        JSONObject jsonObject = storage.get();
-        JSONObject sourceDataUrl = readUrl(jsonObject.getString("sourceDataUrl"));
-        JSONObject tokenDataUrl = readUrl(jsonObject.getString("tokenDataUrl"));
-        JSONObject result = new JSONObject();
-        result.put("id", jsonObject.getInt("id"));
-        result.put("urlType", sourceDataUrl.getString("urlType"));
-        result.put("videoUrl", sourceDataUrl.getString("videoUrl"));
-        result.put("value", tokenDataUrl.getString("value"));
-        result.put("ttl", tokenDataUrl.getInt("ttl"));
-        storage.addToResult(result);
-        latch.countDown();
+    public Camera call() throws Exception {
+        CompletableFuture<String> sourceDataUrl = CompletableFuture.supplyAsync(() ->
+                connect(dataUrl[1], "urlType", "videoUrl"));
+        CompletableFuture<String> tokenDataUrl = CompletableFuture.supplyAsync(() ->
+                connect(dataUrl[2], "value", "ttl"));
+        String[] getSourceDataUrl = sourceDataUrl.get().split(" ");
+        String[] getTokenDataUrl = tokenDataUrl.get().split(" ");
+        String id = dataUrl[0];
+        String urlType = getSourceDataUrl[0];
+        String videoUrl = getSourceDataUrl[1];
+        String value = getTokenDataUrl[0];
+        String ttl = getTokenDataUrl[1];
+        return new Camera(id, urlType, videoUrl, value, ttl);
+    }
+
+    private String connect(String urlText, String... params) {
+        try {
+            URL url = new URL(urlText);
+            InputStream input = url.openStream();
+            byte[] buffer = input.readAllBytes();
+            String response = new String(buffer);
+            return new Storage().getData(response, params);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(),e );
+        }
+        return "";
     }
 }

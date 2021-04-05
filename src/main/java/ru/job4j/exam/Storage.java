@@ -1,43 +1,36 @@
 package ru.job4j.exam;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.jcip.annotations.ThreadSafe;
-import org.json.JSONObject;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 @ThreadSafe
 public class Storage {
-    //Queue from source URL
-    private final Queue<JSONObject> queue = new ConcurrentLinkedQueue<>();
-    //Result queue for aggregate data
-    private final Queue<JSONObject> result = new ConcurrentLinkedQueue<>();
-
-    public synchronized void add(JSONObject jsObject) {
-        queue.offer(jsObject);
-        notifyAll();
-    }
-
-    public synchronized JSONObject get() {
-        while (queue.isEmpty()) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
+    public String[] getDataUrl(String response, String... params) {
+        JsonArray jsonArray = JsonParser.parseString(response).getAsJsonArray();
+        String[] arrayDataUrl = new String[jsonArray.size()];
+        for (int i = 0; i < arrayDataUrl.length; i++) {
+            StringBuilder dataUrl = new StringBuilder();
+            for (String param : params) {
+                dataUrl.append(jsonArray.get(i).getAsJsonObject().get(param)).append(" ");
             }
+            arrayDataUrl[i] = dataUrl.toString().replaceAll("\"", "").trim();
         }
-        return queue.poll();
+        return arrayDataUrl;
     }
 
-    public void addToResult(JSONObject object) {
-        result.offer(object);
+    public String getData(String response, String... params) {
+        JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
+        StringBuilder data = new StringBuilder();
+        for (String param : params) {
+            data.append(jsonObject.get(param)).append(" ");
+        }
+        return data.toString().replaceAll("\"", "").trim();
     }
 
-    public boolean isEmpty() {
-        return queue.isEmpty();
-    }
-
-    public Queue<JSONObject> getResult() {
-        return result;
+    public String getJson(Camera... videoCameras) {
+        return new Gson().toJson(videoCameras);
     }
 }

@@ -1,56 +1,32 @@
 package ru.job4j.exam;
 
-import org.json.JSONArray;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.StringJoiner;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import org.slf4j.Logger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.*;
+
 
 public class Producer {
 
-    private final Storage storage = new Storage();
+    private static final Logger LOGGER =  LoggerFactory.getLogger(Producer.class.getName());
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final ConcurrentLinkedQueue<Future<Camera>> futures =
+            new ConcurrentLinkedQueue<>();
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-    private final CountDownLatch downLatch = new CountDownLatch(Runtime.getRuntime().availableProcessors());
-
-    //Method of reading URL and return JSONArray
-
-    private JSONArray readUrl() throws IOException {
-        //Source URL
-        String url = "http://www.mocky.io/v2/5c51b9dd3400003252129fb5";
-        URL link = new URL(url);
-        StringJoiner joiner = new StringJoiner(System.lineSeparator());
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(link.openStream()))) {
-            reader.lines().forEach(joiner :: add);
+    public String getJson(String[] response) {
+        Arrays.stream(response).map(dataUrl -> executorService
+                .submit(new Agregator(dataUrl))).forEach(futures::offer);
+        ArrayList<Camera> arrayList = new ArrayList<>();
+        try {
+            while (!futures.isEmpty()) {
+                arrayList.add(futures.poll().get());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            LOGGER.error(e.getMessage() , e);
         }
-        return new JSONArray(joiner.toString());
-    }
-
-    //Method of put JSON from source to storage
-
-    public void putToStore(JSONArray array) {
-        for (int i = 0; i < array.length(); i++) {
-            storage.add(array.getJSONObject(i));
-        }
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        System.setProperty("http.proxyHost", "192.168.111.102");
-        System.setProperty("http.proxyPort", "3128");
-        Producer producer = new Producer();
-        producer.putToStore(producer.readUrl());
-        while (!producer.storage.isEmpty()) {
-            producer.executorService.execute(new Agregator(producer.storage, producer.downLatch));
-            Thread.sleep(500);
-        }
-        producer.downLatch.await();
-        producer.executorService.shutdown();
-        System.out.println(producer.storage.getResult());
+        executorService.shutdown();
+        return new Storage().getJson(arrayList.toArray(Camera[]::new));
     }
 }
