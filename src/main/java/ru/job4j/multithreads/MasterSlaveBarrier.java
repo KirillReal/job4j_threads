@@ -1,7 +1,7 @@
 package ru.job4j.multithreads;
 
 public class MasterSlaveBarrier {
-    private volatile boolean masterWorking = true;
+    private boolean masterWorking = true;
 
     public synchronized void tryMaster() {
         while (!masterWorking) {
