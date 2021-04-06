@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.*;
 
-
 public class Producer {
 
     private static final Logger LOGGER =  LoggerFactory.getLogger(Producer.class.getName());
@@ -24,7 +23,7 @@ public class Producer {
                 arrayList.add(futures.poll().get());
             }
         } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error(e.getMessage() , e);
+            LOGGER.error(e.getMessage(), e);
         }
         executorService.shutdown();
         return new Storage().getJson(arrayList.toArray(Camera[]::new));

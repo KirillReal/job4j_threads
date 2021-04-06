@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
-
 public class Agregator implements Callable<Camera> {
     private static final Logger LOGGER =  LoggerFactory.getLogger(Producer.class.getName());
     private final String[] dataUrl;
@@ -42,7 +41,7 @@ public class Agregator implements Callable<Camera> {
             String response = new String(buffer);
             return new Storage().getData(response, params);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(),e );
+            LOGGER.error(e.getMessage(), e);
         }
         return "";
     }
